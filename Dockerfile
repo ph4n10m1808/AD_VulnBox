@@ -35,4 +35,4 @@ EXPOSE 22
 
 
 # CMD khởi động Docker daemon và SSH
- CMD ["/bin/bash", "-c", "dockerd & exec /usr/sbin/sshd -D"]
+CMD ["/bin/bash", "-c", "mkdir -p /run/sshd && dockerd & exec /usr/sbin/sshd -D"]
