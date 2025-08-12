@@ -18,6 +18,7 @@ RUN apt update && apt full-upgrade -y && \
 RUN useradd -m -s /bin/bash team1 && \
     echo 'team1:team1' | chpasswd && \
     usermod -aG docker,sudo team1
+RUN mkdir -p /run/sshd
 
 # Cấu hình SSH
 RUN sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
