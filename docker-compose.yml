@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  team1-box:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: team1-box
+    privileged: true
+    ports:
+      - "2222:22"         # SSH
+      - "1000:1000"
+    volumes:
+      - team1-docker-data:/var/lib/docker      # Docker daemon data
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw       # DinD cần cgroup từ host
+    tmpfs:
+      - /run
+      - /run/lock
+    restart: unless-stopped
+
+volumes:
+  team1-docker-data:
