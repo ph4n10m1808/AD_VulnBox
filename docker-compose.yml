@@ -8,11 +8,45 @@ services:
     container_name: team1-box
     privileged: true
     ports:
-      - "2222:22"         # SSH
+      - "2222:22"         # SSH team 1
       - "1000:1000"
     volumes:
-      - team1-docker-data:/var/lib/docker      # Docker daemon data
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw       # DinD cần cgroup từ host
+      - team1-docker-data:/var/lib/docker
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    restart: unless-stopped
+
+  team2-box:
+    build:
+      context: .
+      dockerfile: Dockerfile1
+    container_name: team2-box
+    privileged: true
+    ports:
+      - "2223:22"         # SSH team 2
+      - "1001:1000"
+    volumes:
+      - team2-docker-data:/var/lib/docker
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    restart: unless-stopped
+
+  team3-box:
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    container_name: team3-box
+    privileged: true
+    ports:
+      - "2224:22"         # SSH team 3
+      - "1002:1000"
+    volumes:
+      - team3-docker-data:/var/lib/docker
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     tmpfs:
       - /run
       - /run/lock
@@ -20,3 +54,5 @@ services:
 
 volumes:
   team1-docker-data:
+  team2-docker-data:
+  team3-docker-data:

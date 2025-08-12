@@ -1,0 +1,38 @@
+FROM debian:trixie
+
+# Cập nhật và cài đặt các gói cần thiết
+RUN apt update && apt full-upgrade -y && \
+    apt install -y \
+    docker.io \
+    docker-compose \
+    docker-buildx \
+    openssh-server \
+    curl \
+    iproute2 \
+    iputils-ping \
+    net-tools \
+    nano \
+    sudo
+
+# Tạo user 'team1' và thêm vào nhóm docker + sudo
+RUN useradd -m -s /bin/bash team3 && \
+    echo 'team3:team3' | chpasswd && \
+    usermod -aG docker,sudo team3
+RUN mkdir -p /run/sshd
+
+# Cấu hình SSH
+RUN sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Tạo thư mục cho sshd
+RUN mkdir -p /var/run/sshd
+
+# Cho phép mount dữ liệu Docker bên trong container
+VOLUME /var/lib/docker
+
+# Expose các port
+EXPOSE 22     
+
+
+# CMD khởi động Docker daemon và SSH
+CMD ["/bin/bash", "-c", "mkdir -p /run/sshd && dockerd & exec /usr/sbin/sshd -D"]
